@@ -30,9 +30,13 @@ def dailyProcess(filepath):
         os.makedirs(outputfiledir)
 
     csvfile = os.path.join(outputfiledir, name + '.csv')
-    odpairsarray = plogxml.batchProcessing(filepath)
-    result = plog.resultsTableView(odpairsarray)
-    result.to_csv(csvfile, sep=',', encoding='utf-8')
+    odpairsarray = plogxml.batchProcessingAll(filepath)
+    print(odpairsarray)
+    result = plog.resultsTableViewForCount(odpairsarray)
+    resultforDB = plog.resultsTableViewAllInfo(odpairsarray)
+    print(result.to_string())
+    print(resultforDB.to_string())
+    resultforDB.to_csv(csvfile, sep=',', encoding='utf-8')
     newresult = linedrawer.prepareData(result)
     linedrawer.drawLineGraph(newresult)
     print(newresult.to_string())
@@ -40,7 +44,7 @@ def dailyProcess(filepath):
 
 
 start = timeit.default_timer()
-dailyProcess(r'C:\Logs\ZIP')
+dailyProcess(r'C:\Logs\TRY')
 stop = timeit.default_timer()
 print('Spent %s seconds processing one day log.' % str(stop-start))
 

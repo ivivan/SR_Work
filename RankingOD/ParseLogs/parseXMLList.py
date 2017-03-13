@@ -41,6 +41,22 @@ def resultsTableView(odarray):
     sorted_df = group_df.sort_values(by='Count', ascending=0).reset_index(drop=True)
     return sorted_df
 
+def resultsTableViewForCount(odarray):
+    print('here')
+    aTuple = ('Origin', 'Destination','Distance','IP','TimeStamp','PrimaryServiceProviderCode')
+    df = pd.DataFrame(odarray, columns=list(aTuple))
+    group_df = df.groupby(['Origin', 'Destination']).size().reset_index(name='Count')
+    sorted_df = group_df.sort_values(by='Count', ascending=0).reset_index(drop=True)
+    return sorted_df
+
+def resultsTableViewAllInfo(odarray):
+    print('here')
+    aTuple = ('Origin', 'Destination','Distance','IP','TimeStamp','PrimaryServiceProviderCode')
+    df = pd.DataFrame(odarray, columns=list(aTuple))
+    return df
+
+
+
 def stationlist(odpairlist):
     odlists_temp = np.array(odpairlist).ravel()
     odlists_unique = np.unique(odlists_temp)

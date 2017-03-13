@@ -13,6 +13,8 @@ def splitfile(filepath):
     stream = open(filepath,'r',encoding='utf-8')
     xmlstartpattern = re.compile(r'^<JourneyPlanningRequest')
     xmlstoppattern = re.compile(r'.*</JourneyPlanningRequest>')
+    responsestartpattern = re.compile(r'^<JourneyPlanningResponse')
+    responsestoppattern = re.compile(r'^</JourneyPlanningResponse>')
     ipPattern = re.compile(r'^IP')
 
     while True:
@@ -30,11 +32,11 @@ def splitfile(filepath):
             if read_content:
                 if re.match(ipPattern, read_content) is not None:
                     ipvalue = read_content
-                if re.match(xmlstartpattern, read_content) is not None:
+                if re.match(responsestartpattern, read_content) is not None:
                     part_stream.write(read_content)
                     withinxml = True
                     getxmlhead = True
-                elif re.match(xmlstoppattern, read_content) is not None:
+                elif re.match(responsestoppattern, read_content) is not None:
                     if getxmlhead:
                         part_stream.write(read_content)
                         withinxml = False
