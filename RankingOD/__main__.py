@@ -36,7 +36,7 @@ def dailyProcess(filepath):
     print(newresult.to_string())
     print(newresult['Count'].sum())
 
-# multiprocessing.freeze_support()
+
 start = timeit.default_timer()
 dailyProcess(r'C:\Logs\TRY')
 stop = timeit.default_timer()
