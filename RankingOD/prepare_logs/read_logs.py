@@ -38,14 +38,14 @@ def multiprocess_log(filepath):
     for f in files:
         print('Start log %s:' % f)
         result = pool.apply_async(process_each_log,[f])
-        result_together.append(result.get())
+        # result_together.append(result.get())
         print('Finish log %s' % f)
 
     pool.close()
     pool.join()
 
-    processed_results = [num for elem in result_together for num in elem]
-    olog.output_group(processed_results,files[0])
+    # processed_results = [num for elem in result_together for num in elem]
+    # olog.output_group(processed_results,files[0])
 
 def process_each_log(filepath):
     eachxml = ''
@@ -97,7 +97,24 @@ def process_each_log(filepath):
                                 elif withinxml:
                                     eachxml += line.decode('utf-8')
     z.close()
-    return odpairs
+
+
+    filedir,name = os.path.split(filepath)
+    name,ext = os.path.splitext(name)
+    outputfiledir = os.path.abspath(os.path.join(filedir, 'DataBase', name))
+    if not os.path.exists(outputfiledir):
+        os.makedirs(outputfiledir)
+    csvfile = os.path.join(outputfiledir, name + '.csv')
+    result = olog.results_dataframe_counts(odpairs)
+    resultforDB = olog.results_dataframe_all(odpairs)
+    resultforDB.to_csv(csvfile, sep=',', encoding='utf-8')
+
+
+    # return odpairs
+
+
+
+
 
 
 if __name__ == '__main__':
