@@ -91,6 +91,8 @@ def process_each_log(filepath):
                                                   re.search(tsvalue_pattern, ts_value).group(0) if re.search(
                                                       tsvalue_pattern, ts_value) else '29990101')
                                          for e in eachod]
+                                        # eachod.insert(3,ip_value)
+                                        # eachod.insert(4,ts_value)
 
                                         odpairs.extend(eachod)
                                         eachxml = ''
@@ -99,15 +101,15 @@ def process_each_log(filepath):
     z.close()
 
 
-    filedir,name = os.path.split(filepath)
-    name,ext = os.path.splitext(name)
-    outputfiledir = os.path.abspath(os.path.join(filedir, 'DataBase', name))
-    if not os.path.exists(outputfiledir):
-        os.makedirs(outputfiledir)
-    csvfile = os.path.join(outputfiledir, name + '.csv')
-    result = olog.results_dataframe_counts(odpairs)
-    resultforDB = olog.results_dataframe_all(odpairs)
-    resultforDB.to_csv(csvfile, sep=',', encoding='utf-8')
+    # filedir,name = os.path.split(filepath)
+    # name,ext = os.path.splitext(name)
+    # outputfiledir = os.path.abspath(os.path.join(filedir, 'DataBase', name))
+    # if not os.path.exists(outputfiledir):
+    #     os.makedirs(outputfiledir)
+    # csvfile = os.path.join(outputfiledir, name + '.csv')
+    # result = olog.results_dataframe_counts(odpairs)
+    # resultforDB = olog.results_dataframe_all(odpairs)
+    # resultforDB.to_csv(csvfile, sep=',', encoding='utf-8')
 
 
     # return odpairs

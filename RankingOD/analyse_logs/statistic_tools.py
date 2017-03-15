@@ -7,8 +7,11 @@ def top_n_rows(dataframe, rownumber):
     df = dataframe.head(rownumber)
     return df
 
-def top_n_rows_conditions(dataframe,number):
-    dataframe['group'] = pd.qcut(dataframe.Count, number)
+def top_n_rows_conditions(dataframe):
+    bins = [0,20,200,2000,20000]
+    group_names = ['Rarely ', 'Few', 'Normal', 'Hot']
+    # categories = pd.cut(dataframe['Count'], bins, labels=group_names)
+    dataframe['categories'] = pd.cut(dataframe['Count'], bins, labels=group_names)
     return dataframe
 
 def top_n_rows_lager(dataframe,number):
@@ -34,7 +37,7 @@ if __name__  == '__main__':
     couted_df = rl.calculate_count(log_dataframe)
     print(couted_df.to_string)
 
-    choosen_dataframe = top_n_rows_conditions(couted_df, 20)
+    choosen_dataframe = top_n_rows_conditions(couted_df)
     print(choosen_dataframe.to_string)
 
     # choosen_dataframe = top_n_rows_lager(couted_df,50)
