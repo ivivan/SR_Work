@@ -202,7 +202,9 @@ def process_each_log(filepath):
                                         withinxml = False
                                         getxmlhead = False
                                         print(file_name)
-                                        eachod = plog.parse_response_xml_lxml(
+                                        # eachod = plog.parse_response_xml_lxml(
+                                        #     eachxml)
+                                        eachod = plog.test_lxml(
                                             eachxml)
                                         [e.insert(3, re.search(ipaddr_pattern, ip_value).group(0) if re.search(
                                             ipaddr_pattern, ip_value) else '0.0.0.0') for e in eachod]
