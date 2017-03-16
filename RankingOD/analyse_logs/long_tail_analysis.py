@@ -1,26 +1,33 @@
 from RankingOD.analyse_logs import read_logs as rl
+from RankingOD.VirtualOD import LineGraphOD as linedrawer
 import pandas as pd
 import numpy as np
+import os
+
 
 def top_n_rows(dataframe, rownumber):
     """return top N rows, dataframe is ordered by Count """
     df = dataframe.head(rownumber)
     return df
 
+
 def top_n_rows_conditions(dataframe):
-    bins = [0,20,200,2000,20000]
+    bins = [20,1000,2000,3000,4000,5000,9000]
     group_names = ['Rarely ', 'Few', 'Normal', 'Hot']
     # categories = pd.cut(dataframe['Count'], bins, labels=group_names)
     dataframe['categories'] = pd.cut(dataframe['Count'], bins, labels=group_names)
     return dataframe
 
+
 def top_n_rows_lager(dataframe,number):
     df = dataframe[dataframe.Count > number]
     return df
 
+
 def top_n_rows_smaller(dataframe,number):
     df = dataframe[dataframe.Count < number]
     return df
+
 
 def top_n_rows_percentage(dataframe):
     df = dataframe.assign(Perc=dataframe['Count']/dataframe['Count'].sum())
@@ -40,17 +47,15 @@ def n_percentage_part(percentage_level, counted_od):
     percentage_od = count_to_percentage(counted_od)
     if percentage_level == 1.0:
         od_num = len(counted_od)
-        print('%s %% covers %s od pairs' % (percentage_level * 100, od_num))
+        #print('%s %% covers %s od pairs' % (percentage_level * 100, od_num))
     else:
         for i in percentage_od:
             if total < percentage_level:
                 total += i
             else:
-                print(total)
                 od_num = percentage_od.index(i)
-                print(counted_od[percentage_od.index(i)])
-                print('%s %% covers %s od pairs' % (percentage_level*100, percentage_od.index(i)))
-                print('Last od pair has %s counts' % counted_od[percentage_od.index(i)])
+                #print('%s %% covers %s od pairs' % (percentage_level*100, percentage_od.index(i)))
+                #print('Last od pair has %s counts' % counted_od[percentage_od.index(i)])
                 break
     return od_num
 
@@ -64,7 +69,7 @@ def n_odpairs_percentage(od_num, counted_od):
             total += i
             start += 1
         else:
-            print('%s od pairs can cover %s %% counts' % (od_num, total*100/np.sum(counted_od)))
+            #print('%s od pairs can cover %s %% counts' % (od_num, total*100/np.sum(counted_od)))
             break
     return total/np.sum(counted_od)
 
@@ -79,9 +84,8 @@ def percentage_od_xy(range,count):
         {'percentage': range,
          'od_needed': percentages
          })
-
-    print(percentile_list)
     return percentile_list
+
 
 def od_percentage_xy(range, count):
     """generate dataframe, x counts, y percentage"""
@@ -93,72 +97,55 @@ def od_percentage_xy(range, count):
         {'od_needed': range,
          'percentage': percentages
          })
-
-    print(percentile_list)
     return percentile_list
 
 
-
-
-
-
-
+def perc_perc_xy(po_df,count):
+    po_df_perc = po_df.assign(od_needed=lambda x: x/len(count))
+    return po_df_perc
 
 
 if __name__  == '__main__':
-    log_dataframe = rl.read_csv(r'C:\Logs\DataBase\20160613_copy\ZIP.csv')
+    filepath = r'C:\Logs\DataBase\20160613_copy\ZIP.csv'
+    filedir,name = os.path.split(filepath)
+    name,ext = os.path.splitext(name)
 
-    print(log_dataframe.describe())
 
-
-    # couted_df = rl.calculate_count(log_dataframe)
-    # print(couted_df.to_string)
-    #
-    # choosen_dataframe = top_n_rows_conditions(couted_df)
-    # print(choosen_dataframe.to_string)
-
-    # choosen_dataframe = top_n_rows_lager(couted_df,50)
-    # print(choosen_dataframe.to_string)
-    #
-    # choosen_dataframe_smaller = top_n_rows_smaller(couted_df,50)
-    #
-    # percentage_dataframe = top_n_rows_percentage(couted_df)
-    # print(percentage_dataframe.to_string )
-
-    # print(log_dataframe)
-
+    log_dataframe = rl.read_csv(filepath)
     count = log_dataframe['Count'].tolist()
-    print(count)
 
-    median = np.median(count)
+    median = np.median(count)  # output median number
     print(median)
 
-    summary = np.sum(count)
+    summary = np.sum(count)  # output total counts
     print(summary)
 
+    print(log_dataframe.describe())  # output describeof the dataframe
+
     percentage = [e/summary for e in count]
-    # print(percentage[0])
-    # print(count[0]/summary)
 
+    # # draw line graph ,x: perc y: od
+    # po_df = percentage_od_xy(np.linspace(0.5, 1.0, num=11), count)
+    # linedrawer.line_per_od(po_df,"OD_pairs_needed")
+    #
+    # # draw line graph, x: od y: perc
+    # po_df = od_percentage_xy(range(5000,len(count),1000), count)
+    # linedrawer.line_od_per(po_df,"OD_pairs_coverage")
 
-    n_percentage_part(1.0, count)
+    # # draw line graph, x: od perc y: perc
+    # po_df = od_percentage_xy(range(5000, len(count), 1000), count)
+    # po_df_perc = perc_perc_xy(po_df,count)
+    # linedrawer.line_odper_per(po_df_perc,"OD_Coverage_Relationship")
 
-    n_odpairs_percentage(10000,count)
+    # draw line graph, x: perc y: od perc
+    # po_df = percentage_od_xy(np.linspace(0.5, 1.0, num=11), count)
+    # po_df_perc = perc_perc_xy(po_df,count)
+    # linedrawer.line_per_odper(po_df_perc,"Coverage_OD_Relationship")
 
+    # choose top 25k od pairs for analysing
+    top_df = top_n_rows(log_dataframe,25000)
 
-
-    po_df = percentage_od_xy(np.linspace(0.5, 1.0, num=11),count)
-
-
-
-
-    po_df_perc = po_df.assign(od_needed=lambda x: x/len(count))
-
-
-
-    print(po_df_perc)
-
-    # od_percentage_xy(range(5000,len(count),1000),count)
+    print(top_df.head())
 
 
 

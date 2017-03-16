@@ -1,11 +1,9 @@
 from RankingOD.prepare_logs import read_logs as rlog
 from RankingOD.prepare_logs import output_logs as olog
 from RankingOD.VirtualOD import LineGraphOD as linedrawer
-
 import os
 import re
 import timeit
-import multiprocessing
 
 
 def dailyProcess(filepath):
