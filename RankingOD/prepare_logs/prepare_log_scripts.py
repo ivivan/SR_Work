@@ -34,7 +34,7 @@ def multiprocess_log(filepath):
         os.makedirs(outputfiledir)
     csvfile = os.path.join(outputfiledir, name + '.csv')
 
-    result = results_dataframe_counts(processed_results_part)
+    result = results_dataframe(processed_results_part)
     result.to_csv(csvfile, sep=',', encoding='utf-8')  # csv for OD pairs and counting
     print('done')
 
@@ -45,14 +45,14 @@ def process_each_log_in_zip(f):
     getxmlhead = False
 
     with open(f) as log:
-        print(f)
+        print('Processing:%s' % f)
         for line in log:
             if line:
                 if not getxmlhead:
                     if line[0] == '<' and '<JourneyPlanningRes' in line:
                         eachxml.append(line)
                         getxmlhead = True
-                elif line[0] == '<' and '</JourneyPlanningRes' in line:
+                elif line[0] == '<' and '</J' in line:
                     eachxml.append(line)
                     getxmlhead = False
                     eachod = test_lxml(''.join(eachxml))
@@ -95,13 +95,11 @@ def test_lxml(filepath):
     return od
 
 
-def results_dataframe_counts(odarray):
+def results_dataframe(odarray):
     """Table View Results, O, D, C"""
     title = ('Origin', 'Destination','Distance','PrimaryServiceProviderCode')
     df = pd.DataFrame(odarray, columns=list(title))
-    group_df = df.groupby(['Origin', 'Destination']).size().reset_index(name='Count')
-    sorted_df = group_df.sort_values(by='Count', ascending=0).reset_index(drop=True)
-    return sorted_df
+    return df
 
 
 if __name__ == '__main__':

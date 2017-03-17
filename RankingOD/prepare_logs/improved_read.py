@@ -33,7 +33,7 @@ def multiprocess_log(filepath):
         os.makedirs(outputfiledir)
     csvfile = os.path.join(outputfiledir, name + '.csv')
 
-    result = olog.results_dataframe_counts(processed_results_part)
+    result = olog.results_dataframe_all(processed_results_part)
     result.to_csv(csvfile, sep=',', encoding='utf-8')  # csv for OD pairs and counting
     print('done')
 

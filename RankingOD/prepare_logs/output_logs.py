@@ -13,7 +13,7 @@ def results_dataframe_counts(odarray):
 
 def results_dataframe_all(odarray):
     """Table View Results, O, D, D, I, T, P"""
-    title = ('Origin', 'Destination','Distance','IP','TimeStamp','PrimaryServiceProviderCode')
+    title = ('Origin', 'Destination','Distance','PrimaryServiceProviderCode')
     df = pd.DataFrame(odarray, columns=list(title))
     return df
 

@@ -126,8 +126,14 @@ if __name__ == '__main__':
     # multiprocess_log(r'C:\Logs\ZIP')
     # stop = timeit.default_timer()
     # print('Spent %s seconds processing one day log.' % str(stop - start))
+    filepath = r'C:\Logs\ZIP'
+    files = []
+    for entry in os.scandir(filepath):
+        if entry.is_file():
+            if entry.name.endswith(".txt"):
+                files.append(entry.path)
+    print(files)
 
-    odpairs = []
 
 
 
