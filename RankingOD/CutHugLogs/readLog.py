@@ -9,7 +9,7 @@ def splitfile(filepath,linesize=5000):
     if not os.path.exists(outputfiledir):
         os.makedirs(outputfiledir)
 
-    partno = 0;
+    partno = 0
     stream = open(filepath,'r',encoding='utf-8')
     while True:
         partfilename = os.path.join(outputfiledir,name+ '_' + str(partno) + ext)

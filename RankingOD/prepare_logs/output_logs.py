@@ -5,7 +5,7 @@ import multiprocessing
 
 def results_dataframe_counts(odarray):
     """Table View Results, O, D, C"""
-    title = ('Origin', 'Destination','Distance','IP','TimeStamp','PrimaryServiceProviderCode')
+    title = ('Origin', 'Destination','Distance','PrimaryServiceProviderCode')
     df = pd.DataFrame(odarray, columns=list(title))
     group_df = df.groupby(['Origin', 'Destination']).size().reset_index(name='Count')
     sorted_df = group_df.sort_values(by='Count', ascending=0).reset_index(drop=True)

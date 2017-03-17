@@ -5,6 +5,7 @@ from RankingOD.prepare_logs import parse_logs as plog
 from RankingOD.prepare_logs import output_logs as olog
 import multiprocessing
 import timeit
+import numpy as np
 
 def process_log_seq(filepath):
     odpairs = []
@@ -120,11 +121,20 @@ def process_each_log(filepath):
 
 
 if __name__ == '__main__':
-    multiprocessing.freeze_support()
-    start = timeit.default_timer()
-    multiprocess_log(r'C:\Logs\ZIP')
-    stop = timeit.default_timer()
-    print('Spent %s seconds processing one day log.' % str(stop - start))
+    # multiprocessing.freeze_support()
+    # start = timeit.default_timer()
+    # multiprocess_log(r'C:\Logs\ZIP')
+    # stop = timeit.default_timer()
+    # print('Spent %s seconds processing one day log.' % str(stop - start))
+
+    odpairs = []
+
+
+
+
+
+
+
 
 
 

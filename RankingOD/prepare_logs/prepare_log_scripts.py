@@ -1,8 +1,9 @@
 import os
-from RankingOD.prepare_logs import parse_logs as plog
-from RankingOD.prepare_logs import output_logs as olog
 import multiprocessing
 import timeit
+from lxml import etree
+import re
+import pandas as pd
 
 
 def multiprocess_log(filepath):
@@ -33,7 +34,7 @@ def multiprocess_log(filepath):
         os.makedirs(outputfiledir)
     csvfile = os.path.join(outputfiledir, name + '.csv')
 
-    result = olog.results_dataframe_counts(processed_results_part)
+    result = results_dataframe_counts(processed_results_part)
     result.to_csv(csvfile, sep=',', encoding='utf-8')  # csv for OD pairs and counting
     print('done')
 
@@ -54,12 +55,53 @@ def process_each_log_in_zip(f):
                 elif line[0] == '<' and '</JourneyPlanningRes' in line:
                     eachxml.append(line)
                     getxmlhead = False
-                    eachod = plog.test_lxml(''.join(eachxml))
+                    eachod = test_lxml(''.join(eachxml))
                     odpairs.extend(eachod)
                     eachxml = []
                 else:
                     eachxml.append(line)
     return odpairs
+
+
+def test_lxml(filepath):
+    """use lxml to parse xml body"""
+    tree = etree.ElementTree(etree.fromstring(filepath))
+    root = tree.getroot()
+    m = re.match('\{.*\}', root.tag)
+    namespace = m.group(0) if m else ''
+
+    originstations = []
+    destinationstatoins = []
+    distances = []
+    servicecodes = set()
+    od = []
+    finddistance = False
+
+    for element in root.iter(namespace+'Distance', namespace+'Location', namespace+'PrimaryServiceProviderCode'):
+        if not finddistance and element.tag == namespace+'Distance':
+            distances.append(element.text)
+            finddistance = True
+        elif element.tag == namespace+'Location':
+            if element.getparent().tag == namespace+'OriginList':
+                originstations.append(element.text)
+            else:
+                destinationstatoins.append(element.text)
+        elif element.tag == namespace+'PrimaryServiceProviderCode':
+            servicecodes.add(element.text)
+
+    for x, y in zip(originstations, destinationstatoins):
+        od.append([x if originstations is not None else 'NONE', y if destinationstatoins is not None else 'NONE',
+                   distances[0] if distances else '0', list(servicecodes) if servicecodes is not None else []])
+    return od
+
+
+def results_dataframe_counts(odarray):
+    """Table View Results, O, D, C"""
+    title = ('Origin', 'Destination','Distance','PrimaryServiceProviderCode')
+    df = pd.DataFrame(odarray, columns=list(title))
+    group_df = df.groupby(['Origin', 'Destination']).size().reset_index(name='Count')
+    sorted_df = group_df.sort_values(by='Count', ascending=0).reset_index(drop=True)
+    return sorted_df
 
 
 if __name__ == '__main__':
