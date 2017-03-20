@@ -27,8 +27,6 @@ def multiprocess_log(filepath):
     result_together = [result.get() for result in results]
     processed_results_part = [num for elem in result_together for num in elem]
     filedir,name = os.path.split(filepath)
-    name,ext = os.path.splitext(name)
-
     outputfiledir = os.path.abspath(os.path.join(filedir, 'OUTPUT', name))
     if not os.path.exists(outputfiledir):
         os.makedirs(outputfiledir)
@@ -45,7 +43,6 @@ def process_each_log_in_zip(f):
     getxmlhead = False
 
     with open(f) as log:
-        print('Processing:%s' % f)
         for line in log:
             if line:
                 if not getxmlhead:
@@ -105,6 +102,7 @@ def results_dataframe(odarray):
 if __name__ == '__main__':
     multiprocessing.freeze_support()
     start = timeit.default_timer()
-    multiprocess_log(r'C:\Logs\ZIP')
+    print('Start processing logs at %s,' % str(start))
+    multiprocess_log(r'C:\Logs\F1.20000000')
     stop = timeit.default_timer()
     print('Spent %s seconds processing daily log.' % str(stop - start))
