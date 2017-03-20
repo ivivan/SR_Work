@@ -1,8 +1,10 @@
-from RankingOD.analyse_logs import read_logs as rl
+from RankingOD.analyse_logs import prepare_df as rl
 from RankingOD.VirtualOD import LineGraphOD as linedrawer
+from RankingOD.VirtualOD import line_graph as lg
 import pandas as pd
 import numpy as np
 import os
+import scipy.optimize as optimize
 
 
 def top_n_rows(dataframe, rownumber):
@@ -11,12 +13,12 @@ def top_n_rows(dataframe, rownumber):
     return df
 
 
-def top_n_rows_conditions(dataframe):
-    bins = [20,1000,2000,3000,4000,5000,9000]
-    group_names = ['Rarely ', 'Few', 'Normal', 'Hot']
-    # categories = pd.cut(dataframe['Count'], bins, labels=group_names)
-    dataframe['categories'] = pd.cut(dataframe['Count'], bins, labels=group_names)
-    return dataframe
+# def top_n_rows_conditions(dataframe):
+#     bins = [20,1000,2000,3000,4000,5000,9000]
+#     group_names = ['Rarely ', 'Few', 'Normal', 'Hot']
+#     # categories = pd.cut(dataframe['Count'], bins, labels=group_names)
+#     dataframe['categories'] = pd.cut(dataframe['Count'], bins, labels=group_names)
+#     return dataframe
 
 
 def top_n_rows_lager(dataframe,number):
@@ -105,8 +107,22 @@ def perc_perc_xy(po_df,count):
     return po_df_perc
 
 
+def curve_fitting_function(df,degree):
+    numpyMatrix = df.as_matrix()
+    y = numpyMatrix[:, 0]
+    x = numpyMatrix[:, 1]
+    print(x)
+    print(y)
+
+    # calculate polynomial
+    z = np.polyfit(x, y, degree)
+    f = np.poly1d(z)
+    return f
+
+
+
 if __name__  == '__main__':
-    filepath = r'C:\Logs\DataBase\20160613_copy\ZIP.csv'
+    filepath = r'C:\work\project\logprocess\join_logs\20170306_count.csv'
     filedir,name = os.path.split(filepath)
     name,ext = os.path.splitext(name)
 
@@ -124,28 +140,54 @@ if __name__  == '__main__':
 
     percentage = [e/summary for e in count]
 
+    # po_df = percentage_od_xy(np.linspace(0.5, 1.0, num=11), count)
+    # numpyMatrix = po_df.as_matrix()
+    # x = numpyMatrix[:, 0]
+    # y = numpyMatrix[:, 1]
+    # z = np.polyfit(x, y, 3)
+    # f = np.poly1d(z)
+    # print(f)
+
+
+    # top_df = top_n_rows(log_dataframe, 100000)
+
     # # draw line graph ,x: perc y: od
+    # po_df = linedrawer.prepareData(log_dataframe)
+    # linedrawer.drawLineGraph(po_df, "OD_pairs_count")
+
+
+    # draw line graph ,x: perc y: od
     # po_df = percentage_od_xy(np.linspace(0.5, 1.0, num=11), count)
     # linedrawer.line_per_od(po_df,"OD_pairs_needed")
-    #
+    # #
     # # draw line graph, x: od y: perc
     # po_df = od_percentage_xy(range(5000,len(count),1000), count)
     # linedrawer.line_od_per(po_df,"OD_pairs_coverage")
-
+    #
     # # draw line graph, x: od perc y: perc
     # po_df = od_percentage_xy(range(5000, len(count), 1000), count)
     # po_df_perc = perc_perc_xy(po_df,count)
     # linedrawer.line_odper_per(po_df_perc,"OD_Coverage_Relationship")
-
-    # draw line graph, x: perc y: od perc
+    #
+    # # draw line graph, x: perc y: od perc
     # po_df = percentage_od_xy(np.linspace(0.5, 1.0, num=11), count)
     # po_df_perc = perc_perc_xy(po_df,count)
     # linedrawer.line_per_odper(po_df_perc,"Coverage_OD_Relationship")
 
-    # choose top 25k od pairs for analysing
-    top_df = top_n_rows(log_dataframe,25000)
+    # draw line graph with fitting function, x: perc y: od perc
+    po_df = percentage_od_xy(np.linspace(0.5, 1.0, num=11), count)
+    po_df_perc = perc_perc_xy(po_df,count)
+    f = curve_fitting_function(po_df_perc,4)
+    print(f)
+    linedrawer.line_per_odper_fitting_fuction(po_df_perc, f, "Coverage_OD_Relationship_with_fitting")
 
-    print(top_df.head())
+
+    # choose top 25k od pairs for analysing
+    # top_df = top_n_rows(log_dataframe,25000)
+
+
+
+
 
 
 
