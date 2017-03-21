@@ -20,8 +20,7 @@ def drawLineGraph(prepareddata,filename):
     data = [
         go.Scatter(
             x=prepareddata['OD'], # assign x as the dataframe column 'x'
-            y=prepareddata['Count'],
-            name='2016-06-13'
+            y=prepareddata['Count']
         )
     ]
     layout = go.Layout(
@@ -32,7 +31,8 @@ def drawLineGraph(prepareddata,filename):
                 family='Courier New, monospace',
                 size=18,
                 color='#7f7f7f'
-            )
+            ),
+            dtick=10000
         ),
         yaxis=dict(
             title='Count',
@@ -46,13 +46,13 @@ def drawLineGraph(prepareddata,filename):
     fig = go.Figure(data=data, layout=layout)
     py.plot(fig, filename=filename)
 
+
 def line_per_od(dataframe,filename):
     """line graph for long tail analysis. X: percentage Y: od pairs"""
     data = [
         go.Scatter(
             x=dataframe['percentage'], # assign x as the dataframe column 'x'
-            y=dataframe['od_needed'],
-            name='2016-06-13'
+            y=dataframe['od_needed']
         )
     ]
     layout = go.Layout(
@@ -84,7 +84,6 @@ def line_od_per(dataframe,filename):
         go.Scatter(
             x=dataframe['od_needed'], # assign x as the dataframe column 'x'
             y=dataframe['percentage'],
-            name='2016-06-13'
         )
     ]
     layout = go.Layout(
@@ -115,8 +114,7 @@ def line_odper_per(dataframe,filename):
     data = [
         go.Scatter(
             x=dataframe['od_needed'], # assign x as the dataframe column 'x'
-            y=dataframe['percentage'],
-            name='2016-06-13'
+            y=dataframe['percentage']
         )
     ]
     layout = go.Layout(
@@ -147,8 +145,7 @@ def line_per_odper(dataframe,filename):
     data = [
         go.Scatter(
             x=dataframe['percentage'], # assign x as the dataframe column 'x'
-            y=dataframe['od_needed'],
-            name='2016-06-13'
+            y=dataframe['od_needed']
         )
     ]
     layout = go.Layout(

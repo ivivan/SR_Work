@@ -14,14 +14,6 @@ def top_n_rows(dataframe, rownumber):
     return df
 
 
-# def top_n_rows_conditions(dataframe):
-#     bins = [20,1000,2000,3000,4000,5000,9000]
-#     group_names = ['Rarely ', 'Few', 'Normal', 'Hot']
-#     # categories = pd.cut(dataframe['Count'], bins, labels=group_names)
-#     dataframe['categories'] = pd.cut(dataframe['Count'], bins, labels=group_names)
-#     return dataframe
-
-
 def top_n_rows_lager(dataframe,number):
     df = dataframe[dataframe.Count > number]
     return df
@@ -50,15 +42,12 @@ def n_percentage_part(percentage_level, counted_od):
     percentage_od = count_to_percentage(counted_od)
     if percentage_level == 1.0:
         od_num = len(counted_od)
-        #print('%s %% covers %s od pairs' % (percentage_level * 100, od_num))
     else:
         for i in percentage_od:
             if total < percentage_level:
                 total += i
             else:
                 od_num = percentage_od.index(i)
-                #print('%s %% covers %s od pairs' % (percentage_level*100, percentage_od.index(i)))
-                #print('Last od pair has %s counts' % counted_od[percentage_od.index(i)])
                 break
     return od_num
 
@@ -72,7 +61,6 @@ def n_odpairs_percentage(od_num, counted_od):
             total += i
             start += 1
         else:
-            #print('%s od pairs can cover %s %% counts' % (od_num, total*100/np.sum(counted_od)))
             break
     return total/np.sum(counted_od)
 
@@ -109,9 +97,9 @@ def perc_perc_xy(po_df,count):
 
 
 def curve_fitting_function(df,degree):
-    numpyMatrix = df.as_matrix()
-    y = numpyMatrix[:, 0]
-    x = numpyMatrix[:, 1]
+    numpymatrix = df.as_matrix()
+    y = numpymatrix[:, 0]
+    x = numpymatrix[:, 1]
     print(x)
     print(y)
 
@@ -120,19 +108,16 @@ def curve_fitting_function(df,degree):
     f = np.poly1d(z)
     return f
 
+
 def custom_fitting_function(df):
-    numpyMatrix = df.as_matrix()
-    y = numpyMatrix[:, 0]
-    x = numpyMatrix[:, 1]
+    numpymatrix = df.as_matrix()
+    y = numpymatrix[:, 0]
+    x = numpymatrix[:, 1]
 
     def func(x, a, b,c):
         return a * np.exp(b * x)-c
 
     popt, pcov = optimize.curve_fit(func, x, y)
-    # a = popt[0]  # popt里面是拟合系数，读者可以自己help其用法
-    # b = popt[1]
-    # c = popt[2]
-    #yvals = func(x, a, b, c)
     yvals = func(x, *popt)
     print(popt)
     plot1 = plt.plot(x, y, '*', label='original values')
@@ -145,60 +130,59 @@ def custom_fitting_function(df):
     plt.savefig('p2.png')
 
 
+def statistic_daily_log(df):
+    count = df['Count'].tolist()
+
+
+
+def draw_all_chars(df):
+    count = df['Count'].tolist()
+
+    # draw line graph ,x: perc y: od
+    po_df = linedrawer.prepareData(df)
+    linedrawer.drawLineGraph(po_df, "OD_pairs_count")
+
+
+    #draw line graph ,x: perc y: od
+    po_df = percentage_od_xy(np.linspace(0.5, 1.0, num=11), count)
+    linedrawer.line_per_od(po_df,"OD_pairs_needed")
+
+    # draw line graph, x: od y: perc
+    po_df = od_percentage_xy(range(5000,len(count),1000), count)
+    linedrawer.line_od_per(po_df,"OD_pairs_coverage")
+
+    # draw line graph, x: od perc y: perc
+    po_df = od_percentage_xy(range(5000, len(count), 1000), count)
+    po_df_perc = perc_perc_xy(po_df,count)
+    linedrawer.line_odper_per(po_df_perc,"OD_Coverage_Relationship")
+
+    # draw line graph, x: perc y: od perc
+    po_df = percentage_od_xy(np.linspace(0.5, 1.0, num=11), count)
+    po_df_perc = perc_perc_xy(po_df,count)
+    linedrawer.line_per_odper(po_df_perc,"Coverage_OD_Relationship")
+
 
 
 if __name__  == '__main__':
     filepath = r'C:\work\project\logprocess\join_logs\20170307\20170307_count.csv'
     filedir,name = os.path.split(filepath)
     name,ext = os.path.splitext(name)
-
-
     log_dataframe = rl.read_csv(filepath)
     count = log_dataframe['Count'].tolist()
 
     median = np.median(count)  # output median number
-    print(median)
+    print('median value is: %s' % median)
 
     summary = np.sum(count)  # output total counts
-    print(summary)
+    print('Total queries are: %s' % summary)
 
     print(log_dataframe.describe())  # output describeof the dataframe
-
     percentage = [e/summary for e in count]
 
-    # po_df = percentage_od_xy(np.linspace(0.5, 1.0, num=11), count)
-    # numpyMatrix = po_df.as_matrix()
-    # x = numpyMatrix[:, 0]
-    # y = numpyMatrix[:, 1]
-    # z = np.polyfit(x, y, 3)
-    # f = np.poly1d(z)
-    # print(f)
+
+    #draw_all_chars(log_dataframe)
 
 
-    # top_df = top_n_rows(log_dataframe, 100000)
-
-    # # draw line graph ,x: perc y: od
-    # po_df = linedrawer.prepareData(log_dataframe)
-    # linedrawer.drawLineGraph(po_df, "OD_pairs_count")
-
-
-    # draw line graph ,x: perc y: od
-    # po_df = percentage_od_xy(np.linspace(0.5, 1.0, num=11), count)
-    # linedrawer.line_per_od(po_df,"OD_pairs_needed")
-    # #
-    # # draw line graph, x: od y: perc
-    # po_df = od_percentage_xy(range(5000,len(count),1000), count)
-    # linedrawer.line_od_per(po_df,"OD_pairs_coverage")
-    #
-    # # draw line graph, x: od perc y: perc
-    # po_df = od_percentage_xy(range(5000, len(count), 1000), count)
-    # po_df_perc = perc_perc_xy(po_df,count)
-    # linedrawer.line_odper_per(po_df_perc,"OD_Coverage_Relationship")
-    #
-    # # draw line graph, x: perc y: od perc
-    # po_df = percentage_od_xy(np.linspace(0.5, 1.0, num=11), count)
-    # po_df_perc = perc_perc_xy(po_df,count)
-    # linedrawer.line_per_odper(po_df_perc,"Coverage_OD_Relationship")
 
     # # draw line graph with fitting function, x: perc y: od perc
     # po_df = percentage_od_xy(np.linspace(0.5, 1.0, num=11), count)
@@ -206,15 +190,13 @@ if __name__  == '__main__':
     # f = curve_fitting_function(po_df_perc,5)
     # print(f)
     # linedrawer.line_per_odper_fitting_fuction(po_df_perc, f, "Coverage_OD_Relationship_with_fitting")
-
-
-    # choose top 25k od pairs for analysing
-    # top_df = top_n_rows(log_dataframe,25000)
-
-
-    po_df = percentage_od_xy(np.linspace(0.5, 1.0, num=11), count)
-    po_df_perc = perc_perc_xy(po_df,count)
-    custom_fitting_function(po_df_perc)
+    #
+    #
+    #
+    #
+    # po_df = percentage_od_xy(np.linspace(0.5, 1.0, num=11), count)
+    # po_df_perc = perc_perc_xy(po_df,count)
+    # custom_fitting_function(po_df_perc)
 
 
 

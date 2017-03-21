@@ -13,17 +13,17 @@ def log_results_convert(filepath):
     if len(files) < 2:
         print('Need two log result files')
     else:
-        df_one = pd.read_csv(files[0])
-        df_two = pd.read_csv(files[1])
+        df_one = pd.read_csv(files[0],index_col=0)
+        df_two = pd.read_csv(files[1],index_col=0)
 
-    result = df_one.append(df_two, ignore_index=True)
+    result = df_one.append(df_two)
     filedir,name = os.path.split(filepath)
-    outputfiledir = os.path.abspath(os.path.join(filedir, 'all_logs'))
+    outputfiledir = os.path.abspath(os.path.join(filedir, os.path.pardir,'join_logs',name))
     if not os.path.exists(outputfiledir):
         os.makedirs(outputfiledir)
-    csvfile = os.path.join(outputfiledir, 'join' + '.csv')
+    csvfile = os.path.join(outputfiledir, name + '.csv')
     result.to_csv(csvfile, sep=',', encoding='utf-8', index=False)  # csv for OD pairs, distance and servic eprovider code
 
 
 if __name__ == '__main__':
-    log_results_convert(r'C:\work\project\Logdata')
+    log_results_convert(r'C:\work\project\logprocess\download_log\20170306')
