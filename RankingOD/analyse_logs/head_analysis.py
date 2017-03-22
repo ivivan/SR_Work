@@ -132,7 +132,7 @@ def head_common_df(percentage,filepath):
         temp_df = pd.merge(temp_df, week_log.get(item), on=['Origin', 'Destination'], how='inner')
 
     head_list = list(temp_df)
-    head_list[2: 5] = key_list
+    head_list[2:] = key_list
     temp_df.columns = head_list
 
     return temp_df
@@ -146,39 +146,10 @@ def save_common_df_as_csv(df,outputfolder):
                      index=False)  # csv for OD pairs, distance and servic eprovider code
 
 
-
 if __name__  == '__main__':
-    filepath = r'C:\work\project\logprocess\join_logs\20170308\20170308_count.csv'
+
     filepath_folder = r'C:\work\project\logprocess\processed_result\weekly'
-
-
-
-
-    filedir,name = os.path.split(filepath)
-    name,ext = os.path.splitext(name)
-    log_dataframe = rl.read_csv(filepath)
-    count = log_dataframe['Count'].tolist()
-
-    # for i in np.linspace(0.5, 1.0, num=11):
-    #     print(n_percentage_part(i, count))
-
-
-    # prepare df that can cover x percentage
-    percentage_point = n_percentage_part(0.8, count)
-    popular_df = top_n_rows(log_dataframe, percentage_point)
 
     # one week logs analysis
     temp_df = head_common_df(0.8, filepath_folder)
     save_common_df_as_csv(temp_df, filepath_folder)
-
-
-    # print(temp_df.to_string)
-
-
-
-
-
-
-
-
-
