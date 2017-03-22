@@ -96,8 +96,89 @@ def perc_perc_xy(po_df,count):
     return po_df_perc
 
 
+def weekly_head_df(percentage, filepath):
+    files = []
+    for entry in os.scandir(filepath):
+        if entry.is_file():
+            if entry.name.endswith(".csv"):
+                files.append(entry.path)
+
+    # filedir,name = os.path.split(filepath)
+    # outputfiledir = os.path.abspath(os.path.join(filedir, os.path.pardir,'join_logs',name))
+    week_data = {}
+    for f in files:
+        filedir, name = os.path.split(f)
+        name, ext = os.path.splitext(name)
+        full_df = rl.read_csv(f)
+        count = full_df['Count'].tolist()
+        percentage_point = n_percentage_part(percentage, count)
+        popular_df = top_n_rows(full_df, percentage_point)
+        week_data[name] = popular_df
+
+    return week_data
+
+
+def head_common_df(percentage,filepath):
+    """one week logs analysis, showing common popular od pairs in N days.  Count columns in order by date"""
+    week_log = weekly_head_df(percentage,filepath)
+
+    key_list = []
+    for k in week_log.keys():
+        key_list.append(k)
+    key_list.sort()  # order by date
+
+    temp_df = week_log.get(key_list[0])
+    for item in key_list[1:len(key_list)]:
+        temp_df = pd.merge(temp_df, week_log.get(item), on=['Origin', 'Destination'], how='inner')
+
+    head_list = list(temp_df)
+    head_list[2: 5] = key_list
+    temp_df.columns = head_list
+
+    return temp_df
+
+
+def save_common_df_as_csv(df,outputfolder):
+    """save new csv with common od pairs within one week"""
+    filedir,name = os.path.split(outputfolder)
+    csvfile = os.path.join(filedir, 'common_odpairs' + '.csv')
+    df.to_csv(csvfile, sep=',', encoding='utf-8',
+                     index=False)  # csv for OD pairs, distance and servic eprovider code
+
+
+
 if __name__  == '__main__':
     filepath = r'C:\work\project\logprocess\join_logs\20170308\20170308_count.csv'
+    filepath_folder = r'C:\work\project\logprocess\processed_result\weekly'
+
+
+
+
     filedir,name = os.path.split(filepath)
     name,ext = os.path.splitext(name)
     log_dataframe = rl.read_csv(filepath)
+    count = log_dataframe['Count'].tolist()
+
+    # for i in np.linspace(0.5, 1.0, num=11):
+    #     print(n_percentage_part(i, count))
+
+
+    # prepare df that can cover x percentage
+    percentage_point = n_percentage_part(0.8, count)
+    popular_df = top_n_rows(log_dataframe, percentage_point)
+
+    # one week logs analysis
+    temp_df = head_common_df(0.8, filepath_folder)
+    save_common_df_as_csv(temp_df, filepath_folder)
+
+
+    # print(temp_df.to_string)
+
+
+
+
+
+
+
+
+
