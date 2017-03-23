@@ -210,10 +210,12 @@ if __name__  == '__main__':
 
     # one week logs analysis
     temp_df = head_common_df(1.0, filepath_folder)
+    #temp_df = head_common_df_above(500, filepath_folder)
     save_common_df_as_csv(temp_df, filepath_folder)
 
     # common od pairs percentage
     weekly_popular_od = weekly_head_df(1.0, filepath_folder)
+    #weekly_popular_od = weekly_head_df_above(500, filepath_folder)
     common_od_log(weekly_popular_od,temp_df,filepath_folder)
 
     # bar chart for the same od pairs
