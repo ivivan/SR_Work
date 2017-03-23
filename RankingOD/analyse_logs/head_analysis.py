@@ -210,7 +210,7 @@ if __name__  == '__main__':
 
     # one week logs analysis
     temp_df = head_common_df(1.0, filepath_folder)
-    # save_common_df_as_csv(temp_df, filepath_folder)
+    save_common_df_as_csv(temp_df, filepath_folder)
 
     # common od pairs percentage
     weekly_popular_od = weekly_head_df(1.0, filepath_folder)
@@ -218,4 +218,4 @@ if __name__  == '__main__':
 
     # bar chart for the same od pairs
     tuple_data = bc.prepare_data(weekly_popular_od, temp_df)
-    bc.common_od_histogram(tuple_data,'barchart')
+    bc.common_od_histogram(tuple_data,'same_odpairs')
