@@ -99,14 +99,12 @@ def perc_perc_xy(po_df,count):
 
 
 def weekly_head_df(percentage, filepath):
+    """find subset of od based on percentage coverage"""
     files = []
     for entry in os.scandir(filepath):
         if entry.is_file():
             if entry.name.endswith(".csv"):
                 files.append(entry.path)
-
-    # filedir,name = os.path.split(filepath)
-    # outputfiledir = os.path.abspath(os.path.join(filedir, os.path.pardir,'join_logs',name))
     week_data = {}
     for f in files:
         filedir, name = os.path.split(f)
@@ -115,6 +113,25 @@ def weekly_head_df(percentage, filepath):
         count = full_df['Count'].tolist()
         percentage_point = n_percentage_part(percentage, count)
         popular_df = top_n_rows(full_df, percentage_point)
+        week_data[name] = popular_df
+
+    return week_data
+
+
+def weekly_head_df_above(count_level, filepath):
+    """find subset of od based on count above some value"""
+    files = []
+    for entry in os.scandir(filepath):
+        if entry.is_file():
+            if entry.name.endswith(".csv"):
+                files.append(entry.path)
+    week_data = {}
+    for f in files:
+        filedir, name = os.path.split(f)
+        name, ext = os.path.splitext(name)
+        full_df = rl.read_csv(f)
+        count = full_df['Count'].tolist()
+        popular_df = top_n_rows_lager(full_df, count_level)
         week_data[name] = popular_df
 
     return week_data
@@ -140,18 +157,38 @@ def head_common_df(percentage,filepath):
     return temp_df
 
 
+def head_common_df_above(count_level,filepath):
+    """one week logs analysis, showing common popular od pairs in N days.  Count columns in order by date"""
+    week_log = weekly_head_df_above(count_level,filepath)
+
+    key_list = []
+    for k in week_log.keys():
+        key_list.append(k)
+    key_list.sort()  # order by date
+
+    temp_df = week_log.get(key_list[0])
+    for item in key_list[1:len(key_list)]:
+        temp_df = pd.merge(temp_df, week_log.get(item), on=['Origin', 'Destination'], how='inner')
+
+    head_list = list(temp_df)
+    head_list[2:] = key_list
+    temp_df.columns = head_list
+
+    return temp_df
+
+
 def save_common_df_as_csv(df,outputfolder):
     """save new csv with common od pairs within one week"""
     filedir,name = os.path.split(outputfolder)
-    csvfile = os.path.join(filedir, 'common_odpairs' + '.csv')
+    csvfile = os.path.join(filedir, 'same_odpairs' + '.csv')
     df.to_csv(csvfile, sep=',', encoding='utf-8',
                      index=False)  # csv for OD pairs, distance and servic eprovider code
 
 
 def common_od_log(dic,df, filepath):
-    print('Generate Report for common op pairs')
+    print('Generate Report for same op pairs')
     filedir,name = os.path.split(filepath)
-    outputfile = os.path.join(filedir, 'common_odpairs' + '.txt')
+    outputfile = os.path.join(filedir, 'same_odpairs' + '.txt')
 
     with open(outputfile, 'w') as f:
         for k,v in dic.items():
@@ -159,7 +196,7 @@ def common_od_log(dic,df, filepath):
             f.write('\n')
             f.write('Total number of od paris are: %s \n' % len(v.index))
             f.write('\n')
-            f.write('Total number of common od paris are: %s \n' % len(df.index))
+            f.write('Total number of same od paris are: %s \n' % len(df.index))
             f.write('\n')
             perc = len(df.index)*100/len(v.index)
             f.write('%s %% of od pairs are the same \n' % perc )
