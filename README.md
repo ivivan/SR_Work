@@ -7,11 +7,15 @@
 2. Numpy
  * not use much at this moment
 3. Plotly
- * Better interactive, some limitations for free account 
+ * Better interactive drawing tool, some limitations for free account 
 4. Regular Expression
- * Should not used in performance-required program
+ * Should not be used in performance-required program
 5. Scipy
  * Install in win is a disaster. Fitting function is more powerful than Numpy
+6. matplotlib
+ * powderful, as a backup
+7. Pypy
+ * should have a try later
  
  ***
 
