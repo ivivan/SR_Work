@@ -1,11 +1,13 @@
 from RankingOD.analyse_logs import prepare_df as rl
 from RankingOD.VirtualOD import LineGraphOD as linedrawer
 from RankingOD.VirtualOD import line_graph as lg
+from RankingOD.VirtualOD import barchart as bc
 import pandas as pd
 import numpy as np
 import os
 import scipy.optimize as optimize
 import matplotlib.pyplot as plt
+import collections
 
 
 def top_n_rows(dataframe, rownumber):
@@ -146,10 +148,37 @@ def save_common_df_as_csv(df,outputfolder):
                      index=False)  # csv for OD pairs, distance and servic eprovider code
 
 
+def common_od_log(dic,df, filepath):
+    print('Generate Report for common op pairs')
+    filedir,name = os.path.split(filepath)
+    outputfile = os.path.join(filedir, 'common_odpairs' + '.txt')
+
+    with open(outputfile, 'w') as f:
+        for k,v in dic.items():
+            f.write('Day: %s \n' % k)
+            f.write('\n')
+            f.write('Total number of od paris are: %s \n' % len(v.index))
+            f.write('\n')
+            f.write('Total number of common od paris are: %s \n' % len(df.index))
+            f.write('\n')
+            perc = len(df.index)*100/len(v.index)
+            f.write('%s %% of od pairs are the same \n' % perc )
+            f.write('\n')
+    f.close()
+
+
 if __name__  == '__main__':
 
     filepath_folder = r'C:\work\project\logprocess\processed_result\weekly'
 
     # one week logs analysis
-    temp_df = head_common_df(0.8, filepath_folder)
-    save_common_df_as_csv(temp_df, filepath_folder)
+    temp_df = head_common_df(1.0, filepath_folder)
+    # save_common_df_as_csv(temp_df, filepath_folder)
+
+    # common od pairs percentage
+    weekly_popular_od = weekly_head_df(1.0, filepath_folder)
+    common_od_log(weekly_popular_od,temp_df,filepath_folder)
+
+    # bar chart for the same od pairs
+    tuple_data = bc.prepare_data(weekly_popular_od, temp_df)
+    bc.common_od_histogram(tuple_data,'barchart')
