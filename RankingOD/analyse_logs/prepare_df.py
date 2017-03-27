@@ -34,7 +34,4 @@ def output_df(filepath):
 
 
 if __name__ == '__main__':
-    output_df(r'C:\work\project\logprocess\join_logs\20170310\20170310.csv')
-
-
-
+    output_df(r'C:\work\project\logprocess\join_logs\20170311\20170311.csv')

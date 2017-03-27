@@ -138,7 +138,7 @@ def weekly_head_df_above(count_level, filepath):
 
 
 def head_common_df(percentage,filepath):
-    """one week logs analysis, showing common popular od pairs in N days.  Count columns in order by date"""
+    """one week logs analysis, showing common popular od pairs in N days.  Count columns in order by date. Use percentage to choose data"""
     week_log = weekly_head_df(percentage,filepath)
 
     key_list = []
@@ -158,7 +158,7 @@ def head_common_df(percentage,filepath):
 
 
 def head_common_df_above(count_level,filepath):
-    """one week logs analysis, showing common popular od pairs in N days.  Count columns in order by date"""
+    """one week logs analysis, showing common popular od pairs in N days.  Count columns in order by date. Use value to choose data"""
     week_log = weekly_head_df_above(count_level,filepath)
 
     key_list = []
@@ -185,6 +185,26 @@ def save_common_df_as_csv(df,outputfolder):
                      index=False)  # csv for OD pairs, distance and servic eprovider code
 
 
+def same_od_changing(range, filepath):
+    """return same od pairs under different percentage coverage. [[average_total_number, same_od_number, percentage],...]"""
+    results = []
+    for p in range:
+        total_od = 0
+        result = []
+        each_day_info = weekly_head_df(p, filepath)
+        same_df = head_common_df(p, filepath)
+        for k,v in each_day_info.items():
+            total_od += len(v.index)
+        average_od = total_od//len(each_day_info)
+        result.append(average_od)
+        result.append(len(same_df))
+        result.append(str(p))
+        results.append(result)
+
+    return results
+
+
+
 def common_od_log(dic,df, filepath):
     print('Generate Report for same op pairs')
     filedir,name = os.path.split(filepath)
@@ -205,19 +225,29 @@ def common_od_log(dic,df, filepath):
 
 
 if __name__  == '__main__':
-
     filepath_folder = r'C:\work\project\logprocess\processed_result\weekly'
 
-    # one week logs analysis
-    temp_df = head_common_df(1.0, filepath_folder)
-    #temp_df = head_common_df_above(500, filepath_folder)
-    save_common_df_as_csv(temp_df, filepath_folder)
+    # # one week logs analysis
+    # temp_df = head_common_df(1.0, filepath_folder)
+    # #temp_df = head_common_df_above(500, filepath_folder)
+    # save_common_df_as_csv(temp_df, filepath_folder)
+    #
+    # # common od pairs percentage
+    # weekly_popular_od = weekly_head_df(1.0, filepath_folder)
+    # #weekly_popular_od = weekly_head_df_above(500, filepath_folder)
+    # common_od_log(weekly_popular_od,temp_df,filepath_folder)
+    #
+    # # bar chart for the same od pairs
+    # tuple_data = bc.prepare_data(weekly_popular_od, temp_df)
+    # bc.common_od_histogram(tuple_data,'same_odpairs')
 
-    # common od pairs percentage
-    weekly_popular_od = weekly_head_df(1.0, filepath_folder)
-    #weekly_popular_od = weekly_head_df_above(500, filepath_folder)
-    common_od_log(weekly_popular_od,temp_df,filepath_folder)
+    show = same_od_changing(np.linspace(0.5, 1.0, num=6),filepath_folder)
+    print(show)
+
+    show_two = pd.DataFrame(show, columns=['Total', 'Same', 'Coverage'])
+
+    print(show_two.to_string)
 
     # bar chart for the same od pairs
-    tuple_data = bc.prepare_data(weekly_popular_od, temp_df)
-    bc.common_od_histogram(tuple_data,'same_odpairs')
+    tuple_data = bc.prepare_data_two(show_two)
+    bc.same_od_changing(tuple_data,'same_odpairs')

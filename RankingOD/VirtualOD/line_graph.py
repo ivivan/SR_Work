@@ -14,7 +14,7 @@ def prepareData(resultsindataframe):
 
 def liner_od_count(df):
     fig = df[['OD', 'Count']].plot(kind='line', title="OD popularity")
-    plt.xticks(range(len(df.OD)), df.OD);
+    plt.xticks(range(len(df.OD)), df.OD)
     fig.set_xlabel("OD pairs", fontsize=12)
     fig.set_ylabel("Counts", fontsize=12)
     plt.show()

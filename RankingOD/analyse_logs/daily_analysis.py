@@ -136,21 +136,17 @@ def statistic_daily_log(df,filepath):
     summary = np.sum(count)  # output total counts
 
     # percentage = [e / summary for e in count]
-
     # output statistical results
-
     print('Generate Report')
     filedir,name = os.path.split(filepath)
     outputfile = os.path.join(filedir, name + '.txt')
 
     statistical_report = open(outputfile, 'w', encoding='utf-8')
-
     statistical_report.write('Statistic Information: \n')
     statistical_report.write('Median value is: %s \n' % median)
     statistical_report.write('Total number of queries are: %s \n' % summary)
     statistical_report.write('More Details \n')
     statistical_report.write(df.describe().to_string())
-
     statistical_report.close()
 
 
@@ -181,7 +177,7 @@ def draw_all_chars(df):
 
 
 if __name__  == '__main__':
-    filepath = r'C:\work\project\logprocess\join_logs\20170310\20170310_count.csv'
+    filepath = r'C:\work\project\logprocess\join_logs\20170311\20170311_count.csv'
     filedir,name = os.path.split(filepath)
     name,ext = os.path.splitext(name)
     log_dataframe = rl.read_csv(filepath)
