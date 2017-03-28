@@ -69,11 +69,13 @@ def test_lxml(filepath):
     originstations = []
     destinationstatoins = []
     distances = []
+    journeystarttime = []
     servicecodes = set()
     od = []
     finddistance = False
+    findtime = False
 
-    for element in root.iter(namespace+'Distance', namespace+'Location', namespace+'PrimaryServiceProviderCode'):
+    for element in root.iter(namespace+'Distance', namespace+'Location', namespace+'PrimaryServiceProviderCode', namespace+'Start'):
         if not finddistance and element.tag == namespace+'Distance':
             distances.append(element.text)
             finddistance = True
@@ -82,18 +84,21 @@ def test_lxml(filepath):
                 originstations.append(element.text)
             else:
                 destinationstatoins.append(element.text)
+        elif not findtime and element.tag == namespace+'Start' and element.getparent().tag == namespace+'Timeband':
+            journeystarttime.append(element.text)
+            findtime = True
         elif element.tag == namespace+'PrimaryServiceProviderCode':
             servicecodes.add(element.text)
 
     for x, y in zip(originstations, destinationstatoins):
-        od.append([x if originstations is not None else 'NONE', y if destinationstatoins is not None else 'NONE',
+        od.append([x if originstations is not None else 'NONE', y if destinationstatoins is not None else 'NONE', journeystarttime[0] if journeystarttime else '2000-00-00T00:00:00.000+00:00',
                    distances[0] if distances else '0', list(servicecodes) if servicecodes is not None else []])
     return od
 
 
 def results_dataframe(odarray):
     """Table View Results, O, D, C"""
-    title = ('Origin', 'Destination','Distance','PrimaryServiceProviderCode')
+    title = ('Origin', 'Destination', 'Time', 'Distance', 'PrimaryServiceProviderCode')
     df = pd.DataFrame(odarray, columns=list(title))
     return df
 
