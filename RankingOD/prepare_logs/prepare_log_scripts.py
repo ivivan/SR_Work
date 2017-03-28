@@ -42,21 +42,20 @@ def process_each_log_in_zip(f):
     odpairs = []
     getxmlhead = False
 
-    with open(f) as log:
+    with open(f,encoding='utf-8') as log:
         for line in log:
-            if line:
-                if not getxmlhead:
-                    if line[0] == '<' and '<JourneyPlanningRes' in line:
-                        eachxml.append(line)
-                        getxmlhead = True
-                elif line[0] == '<' and '</J' in line:
+            if not getxmlhead:
+                if line[0] == '<' and '<JourneyPlanningRes' in line:
                     eachxml.append(line)
-                    getxmlhead = False
-                    eachod = test_lxml(''.join(eachxml))
-                    odpairs.extend(eachod)
-                    eachxml = []
-                else:
-                    eachxml.append(line)
+                    getxmlhead = True
+            elif line[0] == '<' and '</J' in line:
+                eachxml.append(line)
+                getxmlhead = False
+                eachod = test_lxml(''.join(eachxml))
+                odpairs.extend(eachod)
+                eachxml = []
+            else:
+                eachxml.append(line)
     return odpairs
 
 

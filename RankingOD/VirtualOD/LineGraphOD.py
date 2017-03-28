@@ -24,9 +24,9 @@ def drawLineGraph(prepareddata,filename):
         )
     ]
     layout = go.Layout(
-        title='OD popularity',
+        title='OD Pairs Popularity',
         xaxis=dict(
-            title='OD',
+            title='OD Pairs',
             titlefont=dict(
                 family='Courier New, monospace',
                 size=18,
@@ -56,9 +56,9 @@ def line_per_od(dataframe,filename):
         )
     ]
     layout = go.Layout(
-        title='OD pairs required by coverage',
+        title='Required OD Pairs Under Different Query Coverage Rates',
         xaxis=dict(
-            title='Percentage',
+            title='Query Coverage Rate (Percentage)',
             titlefont=dict(
                 family='Courier New, monospace',
                 size=18,
@@ -66,7 +66,7 @@ def line_per_od(dataframe,filename):
             )
         ),
         yaxis=dict(
-            title='Number of OD pairs',
+            title='Number of OD Pairs Required',
             titlefont=dict(
                 family='Courier New, monospace',
                 size=18,
@@ -87,9 +87,9 @@ def line_od_per(dataframe,filename):
         )
     ]
     layout = go.Layout(
-        title='OD pairs coverage',
+        title='Relationship between Query Coverage Rate and Number of OD Pairs',
         xaxis=dict(
-            title='Number of OD pairs',
+            title='Number of OD Pairs Required',
             titlefont=dict(
                 family='Courier New, monospace',
                 size=18,
@@ -97,7 +97,7 @@ def line_od_per(dataframe,filename):
             )
         ),
         yaxis=dict(
-            title='Percentage',
+            title='Query Coverage Rate (Percentage)',
             titlefont=dict(
                 family='Courier New, monospace',
                 size=18,
@@ -118,9 +118,9 @@ def line_odper_per(dataframe,filename):
         )
     ]
     layout = go.Layout(
-        title='OD and Coverage Relationship',
+        title='Relationship between Query Coverage Rate and OD Pairs',
         xaxis=dict(
-            title='Percentage of OD pairs',
+            title='OD Pairs (Percentage)',
             titlefont=dict(
                 family='Courier New, monospace',
                 size=18,
@@ -128,7 +128,7 @@ def line_odper_per(dataframe,filename):
             )
         ),
         yaxis=dict(
-            title='Percentage of Coverage',
+            title='Query Coverage Rate (Percentage)',
             titlefont=dict(
                 family='Courier New, monospace',
                 size=18,
@@ -149,9 +149,9 @@ def line_per_odper(dataframe,filename):
         )
     ]
     layout = go.Layout(
-        title='Coverage and OD Relationship',
+        title='Relationship between Query Coverage Rate and OD Pairs',
         xaxis=dict(
-            title='Percentage of Coverage',
+            title='Query Coverage Rate (Percentage)',
             titlefont=dict(
                 family='Courier New, monospace',
                 size=18,
@@ -159,7 +159,7 @@ def line_per_odper(dataframe,filename):
             )
         ),
         yaxis=dict(
-            title='Percentage of OD pairs',
+            title='OD Pairs (Percentage)',
             titlefont=dict(
                 family='Courier New, monospace',
                 size=18,

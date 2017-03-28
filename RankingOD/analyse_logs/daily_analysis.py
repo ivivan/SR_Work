@@ -124,7 +124,7 @@ def custom_fitting_function(df):
     plot2 = plt.plot(x, yvals, 'r', label='curve_fit values')
     plt.xlabel('x axis')
     plt.ylabel('y axis')
-    plt.legend(loc=4)  # 指定legend的位置,读者可以自己help它的用法
+    plt.legend(loc=4)  # location of legend
     plt.title('curve_fit')
     plt.show()
     plt.savefig('p2.png')
@@ -135,7 +135,6 @@ def statistic_daily_log(df,filepath):
     median = np.median(count)  # output median number
     summary = np.sum(count)  # output total counts
 
-    # percentage = [e / summary for e in count]
     # output statistical results
     print('Generate Report')
     filedir,name = os.path.split(filepath)
@@ -155,7 +154,7 @@ def draw_all_chars(df):
 
     # draw line graph ,x: perc y: od
     po_df = linedrawer.prepareData(df)
-    linedrawer.drawLineGraph(po_df, "OD_pairs_count")
+    linedrawer.drawLineGraph(po_df, "OD_Pairs_Popularity")
 
     #draw line graph ,x: perc y: od
     po_df = percentage_od_xy(np.linspace(0.5, 1.0, num=11), count)
@@ -177,7 +176,7 @@ def draw_all_chars(df):
 
 
 if __name__  == '__main__':
-    filepath = r'C:\work\project\logprocess\join_logs\20170311\20170311_count.csv'
+    filepath = r'C:\work\project\logprocess\join_logs\20170306\20170306_count.csv'
     filedir,name = os.path.split(filepath)
     name,ext = os.path.splitext(name)
     log_dataframe = rl.read_csv(filepath)

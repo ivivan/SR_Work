@@ -227,27 +227,23 @@ def common_od_log(dic,df, filepath):
 if __name__  == '__main__':
     filepath_folder = r'C:\work\project\logprocess\processed_result\weekly'
 
-    # # one week logs analysis
-    # temp_df = head_common_df(1.0, filepath_folder)
-    # #temp_df = head_common_df_above(500, filepath_folder)
-    # save_common_df_as_csv(temp_df, filepath_folder)
-    #
-    # # common od pairs percentage
-    # weekly_popular_od = weekly_head_df(1.0, filepath_folder)
-    # #weekly_popular_od = weekly_head_df_above(500, filepath_folder)
-    # common_od_log(weekly_popular_od,temp_df,filepath_folder)
-    #
-    # # bar chart for the same od pairs
-    # tuple_data = bc.prepare_data(weekly_popular_od, temp_df)
-    # bc.common_od_histogram(tuple_data,'same_odpairs')
+    # one week logs analysis
+    temp_df = head_common_df(1.0, filepath_folder)
+    #temp_df = head_common_df_above(500, filepath_folder)
+    save_common_df_as_csv(temp_df, filepath_folder)
 
-    show = same_od_changing(np.linspace(0.5, 1.0, num=6),filepath_folder)
-    print(show)
-
-    show_two = pd.DataFrame(show, columns=['Total', 'Same', 'Coverage'])
-
-    print(show_two.to_string)
+    # common od pairs percentage
+    weekly_popular_od = weekly_head_df(1.0, filepath_folder)
+    #weekly_popular_od = weekly_head_df_above(500, filepath_folder)
+    common_od_log(weekly_popular_od,temp_df,filepath_folder)
 
     # bar chart for the same od pairs
+    tuple_data = bc.prepare_data(weekly_popular_od, temp_df)
+    bc.common_od_histogram(tuple_data,'same_odpairs_perweek')
+
+
+    # bar chart two y axis
+    show = same_od_changing(np.linspace(0.5, 1.0, num=6),filepath_folder)
+    show_two = pd.DataFrame(show, columns=['Total', 'Same', 'Coverage'])
     tuple_data = bc.prepare_data_two(show_two)
     bc.same_od_changing(tuple_data,'same_odpairs')
