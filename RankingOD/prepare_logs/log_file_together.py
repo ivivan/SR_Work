@@ -27,4 +27,4 @@ def log_results_convert(filepath):
 
 
 if __name__ == '__main__':
-    log_results_convert(r'C:\work\project\logprocess\download_log\20170306')
+    log_results_convert(r'C:\work\project\logprocess\download_log\20170312')

@@ -58,5 +58,5 @@ def output_df(filepath):
 
 
 if __name__ == '__main__':
-    output_df(r'C:\work\project\logprocess\join_logs\20170306\20170306.csv')
+    output_df(r'C:\work\project\logprocess\join_logs\20170312\20170312.csv')
     #output_df_all(r'C:\work\project\logprocess\join_logs\20170306\20170306.csv')

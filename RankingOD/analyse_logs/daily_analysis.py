@@ -176,7 +176,7 @@ def draw_all_chars(df):
 
 
 if __name__  == '__main__':
-    filepath = r'C:\work\project\logprocess\join_logs\20170306\20170306_count.csv'
+    filepath = r'C:\work\project\logprocess\join_logs\20170312\20170312_count.csv'
     filedir,name = os.path.split(filepath)
     name,ext = os.path.splitext(name)
     log_dataframe = rl.read_csv(filepath)

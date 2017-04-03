@@ -8,6 +8,7 @@ import os
 import scipy.optimize as optimize
 import matplotlib.pyplot as plt
 import collections
+import re
 
 
 def top_n_rows(dataframe, rownumber):
@@ -224,26 +225,28 @@ def common_od_log(dic,df, filepath):
     f.close()
 
 
+def journey_start_date(df):
+    df['Time'] = df['Time'].str[0:10]
+    return df
+
+
+def split_it(timestamp):
+    date_pattern = re.compile(r'^\d{4}-\d{2}-\d{2}')
+    return re.findall(date_pattern, timestamp)
+
+
 if __name__  == '__main__':
-    filepath_folder = r'C:\work\project\logprocess\processed_result\weekly'
+    filepath_folder = r'C:\work\project\logprocess\join_logs\20170312\20170312.csv'
+    result = pd.read_csv(filepath_folder)
+    new_date_df = journey_start_date(result)
 
-    # one week logs analysis
-    temp_df = head_common_df(1.0, filepath_folder)
-    #temp_df = head_common_df_above(500, filepath_folder)
-    save_common_df_as_csv(temp_df, filepath_folder)
-
-    # common od pairs percentage
-    weekly_popular_od = weekly_head_df(1.0, filepath_folder)
-    #weekly_popular_od = weekly_head_df_above(500, filepath_folder)
-    common_od_log(weekly_popular_od,temp_df,filepath_folder)
-
-    # bar chart for the same od pairs
-    tuple_data = bc.prepare_data(weekly_popular_od, temp_df)
-    bc.common_od_histogram(tuple_data,'same_odpairs_perweek')
+    print(new_date_df)
 
 
-    # bar chart two y axis
-    show = same_od_changing(np.linspace(0.5, 1.0, num=6),filepath_folder)
-    show_two = pd.DataFrame(show, columns=['Total', 'Same', 'Coverage'])
-    tuple_data = bc.prepare_data_two(show_two)
-    bc.same_od_changing(tuple_data,'same_odpairs')
+
+
+
+
+
+
+
