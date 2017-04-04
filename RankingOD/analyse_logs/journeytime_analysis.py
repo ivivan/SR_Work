@@ -240,7 +240,16 @@ def split_it(timestamp):
 def compare_date(date_one, date_two):
     date1 = datetime.strptime(date_one, '%Y-%m-%d')
     date2 = datetime.strptime(date_two, '%Y-%m-%d')
-    return (date1 - date2)
+    return (date1 > date2)
+
+
+def group_journeys(filepath):
+    filedir,name = os.path.split(filepath)
+    name, ext = os.path.splitext(name)
+    today = datetime.strptime(name, '%Y%m%d').date()
+
+    
+
 
 
 if __name__  == '__main__':
@@ -248,13 +257,10 @@ if __name__  == '__main__':
     result = pd.read_csv(filepath_folder)
     new_date_df = journey_start_date(result)
 
-    date1 = datetime.strptime('2017-03-01', '%Y-%m-%d')
-    date2 = datetime.strptime('2017-03-03', '%Y-%m-%d')
-
-    print(date1 > date2)
 
 
-    #print(new_date_df)
+
+
 
 
 
