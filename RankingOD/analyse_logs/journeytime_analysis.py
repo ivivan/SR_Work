@@ -9,6 +9,8 @@ import scipy.optimize as optimize
 import matplotlib.pyplot as plt
 import collections
 import re
+import time
+from datetime import datetime
 
 
 def top_n_rows(dataframe, rownumber):
@@ -235,12 +237,24 @@ def split_it(timestamp):
     return re.findall(date_pattern, timestamp)
 
 
+def compare_date(date_one, date_two):
+    date1 = datetime.strptime(date_one, '%Y-%m-%d')
+    date2 = datetime.strptime(date_two, '%Y-%m-%d')
+    return (date1 - date2)
+
+
 if __name__  == '__main__':
     filepath_folder = r'C:\work\project\logprocess\join_logs\20170312\20170312.csv'
     result = pd.read_csv(filepath_folder)
     new_date_df = journey_start_date(result)
 
-    print(new_date_df)
+    date1 = datetime.strptime('2017-03-01', '%Y-%m-%d')
+    date2 = datetime.strptime('2017-03-03', '%Y-%m-%d')
+
+    print(date1 > date2)
+
+
+    #print(new_date_df)
 
 
 
