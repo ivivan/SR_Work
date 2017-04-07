@@ -130,5 +130,49 @@ def same_od_changing(df,filename):
     fig = go.Figure(data=data,layout=layout)
     py.plot(fig, filename=filename)
 
+
+def journey_start_bar(df,filename):
+    """Journy starting time per day"""
+    trace_0 = go.Bar(
+        x = df['Time'],
+        y = df['Count'],
+        name='Bar Chart'
+    )
+
+    trace_1 = go.Scatter(
+        x = df['Time'],
+        y = df['Count'] ,
+        name='Line Chart',
+    )
+
+    data = [trace_0, trace_1]
+    layout = go.Layout(
+        barmode='stack',
+        title='Journey starting date and total number of query',
+        xaxis=dict(
+            title='Journey Starting Date',
+            type='category',
+            titlefont=dict(
+                family='Courier New, monospace',
+                size=18,
+                color='#7f7f7f'
+            ),
+        ),
+        yaxis=dict(
+            type='linear',
+            title='Number of Queries',
+            titlefont=dict(
+                family='Courier New, monospace',
+                size=18,
+                color='#7f7f7f'
+            )
+        ),
+    )
+
+    fig = go.Figure(data=data,layout=layout)
+    py.plot(fig, filename=filename)
+
+
+
 if __name__  == '__main__':
     prepare_data(dict)

@@ -61,12 +61,20 @@ if __name__  == '__main__':
     new_date_df = journey_start_date(result,filepath_folder)
 
     time_count_df = starttime_count(new_date_df)
-    print(time_count_df)
+    print(time_count_df[time_count_df.Count > 1000])
+
+    bc.journey_start_bar(time_count_df[time_count_df.Count > 1000],'JourneyStartTime')
 
 
 
-    grouped_df = group_starttime(time_count_df,'3D')
-    print(grouped_df)
+    # grouped_df = group_starttime(time_count_df,'3D')
+    # print(grouped_df)
+    #
+    #
+    # head_df = time_count_df[time_count_df.Count > 1000]
+    # print(head_df)
+
+
 
 
 
